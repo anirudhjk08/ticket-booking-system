@@ -1,4 +1,4 @@
-package com.anirudh.demo;
+package com.anirudh.demo.exception;
 
 public class SeatAlreadyBookedException extends RuntimeException{
     public SeatAlreadyBookedException( String seatNumber){

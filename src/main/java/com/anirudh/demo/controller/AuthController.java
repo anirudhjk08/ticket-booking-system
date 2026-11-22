@@ -1,5 +1,6 @@
 package com.anirudh.demo.controller;
 
+import com.anirudh.demo.dto.LoginRequest;
 import com.anirudh.demo.dto.RegisterRequest;
 import com.anirudh.demo.service.AuthService;
 import jakarta.validation.Valid;
@@ -25,5 +26,10 @@ public AuthController(AuthService authService){
         authService.register(request.getUsername(),request.getPassword());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("Message","User registered successfully"));
+}
+@PostMapping("/login")
+    public Map<String,String> login(@Valid @RequestBody LoginRequest request){
+     String token = authService.login(request.getUsername(), request.getPassword());
+     return Map.of(token,"token");
 }
 }

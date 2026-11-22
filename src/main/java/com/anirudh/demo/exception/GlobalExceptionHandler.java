@@ -1,9 +1,5 @@
 package com.anirudh.demo.exception;
 
-import com.anirudh.demo.SeatAlreadyBookedException;
-import com.anirudh.demo.SeatAlreadyExistsException;
-import com.anirudh.demo.SeatNotFoundException;
-import com.anirudh.demo.UsernameAlreadyExistsException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
@@ -43,5 +39,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleIntegrity(DataIntegrityViolationException ex){
          return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(409,"Duplicate or Invalid data"));
+    }
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredentials(InvalidCredentialsException ex){
+         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                 .body(new ErrorResponse(401, ex.getMessage()));
     }
 }

@@ -1,8 +1,8 @@
 package com.anirudh.demo.service;
 
-import com.anirudh.demo.SeatAlreadyBookedException;
-import com.anirudh.demo.SeatAlreadyExistsException;
-import com.anirudh.demo.SeatNotFoundException;
+import com.anirudh.demo.exception.SeatAlreadyBookedException;
+import com.anirudh.demo.exception.SeatAlreadyExistsException;
+import com.anirudh.demo.exception.SeatNotFoundException;
 import com.anirudh.demo.model.Seat;
 import com.anirudh.demo.repository.SeatRepository;
 import jakarta.transaction.Transactional;
