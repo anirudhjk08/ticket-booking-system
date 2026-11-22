@@ -1,6 +1,7 @@
 package com.anirudh.demo.service;
 
 import com.anirudh.demo.SeatAlreadyBookedException;
+import com.anirudh.demo.SeatAlreadyExistsException;
 import com.anirudh.demo.SeatNotFoundException;
 import com.anirudh.demo.model.Seat;
 import com.anirudh.demo.repository.SeatRepository;
@@ -19,6 +20,9 @@ public class SeatService {
     }
 
     public Seat addSeat(String seatNumber){
+        if(seatRepository.existsBySeatNumber(seatNumber)){
+            throw new SeatAlreadyExistsException(seatNumber);
+        }
         Seat seat = new Seat();
         seat.setSeatNumber(seatNumber);;
         seat.setBooked(false);

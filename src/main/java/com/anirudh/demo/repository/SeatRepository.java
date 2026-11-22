@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface SeatRepository extends JpaRepository<Seat,Long> { //JPA Repository provides many functions implicityly without writing them
     Optional<Seat> findBySeatNumber(String seatNumber); // a derived query whose format is findBy+fieldname
     List<Seat> findByBookedFalse();
+     boolean existsBySeatNumber(String seatNumber);
 }

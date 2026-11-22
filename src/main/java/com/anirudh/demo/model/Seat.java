@@ -7,6 +7,7 @@ public class Seat {
      @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY) //It allows the postgres to create unique ids itself
     private Long id;
+     @Column(unique = true, nullable = false)
     private String seatNumber;
     private boolean booked;
      //Optimistic approach to prevent conflicts Version is a number that updates everytime the row updates

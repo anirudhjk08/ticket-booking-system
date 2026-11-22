@@ -11,7 +11,7 @@ public class User {
     @Column(unique = true , nullable = false)
     private String username;
     @Column(nullable = false)
-    private String method;
+    private String password;
 
     public Long getId() {
         return id;
@@ -29,12 +29,12 @@ public class User {
         this.username = username;
     }
 
-    public String getMethod() {
-        return method;
+    public String getPassword() {
+        return password;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public User(){
