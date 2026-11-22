@@ -1,5 +1,7 @@
 package com.anirudh.demo.service;
 
+import com.anirudh.demo.SeatAlreadyBookedException;
+import com.anirudh.demo.SeatNotFoundException;
 import com.anirudh.demo.model.Seat;
 import com.anirudh.demo.repository.SeatRepository;
 import jakarta.transaction.Transactional;
@@ -31,9 +33,9 @@ public class SeatService {
     //Wraps the whole method as single database transaction either the whole method is executed or rollback
     @Transactional
     public Seat bookSeat(Long seatId){
-        Seat seat = seatRepository.findById(seatId).orElseThrow(()->new IllegalArgumentException("Seat not found: "+seatId));
+        Seat seat = seatRepository.findById(seatId).orElseThrow(()->new SeatNotFoundException(seatId));
         if(seat.isBooked()){
-            throw new IllegalStateException("Seat Already booked: "+seat.getSeatNumber());
+            throw new SeatAlreadyBookedException(seat.getSeatNumber());
         }
         seat.setBooked(true);
         return seatRepository.save(seat);
