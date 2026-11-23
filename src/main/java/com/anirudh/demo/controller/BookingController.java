@@ -16,7 +16,7 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    @PostMapping("/seat/{id}/book")
+    @PostMapping("/seats/{id}/book")
     public BookingResponse bookSeat(@PathVariable Long id, Authentication authentication){
         return bookingService.bookSeat(id,authentication.getName());
     }

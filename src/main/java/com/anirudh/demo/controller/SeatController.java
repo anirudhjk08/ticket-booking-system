@@ -32,8 +32,4 @@ public class SeatController {
     public List<Seat> getAvailableSeats(){
         return seatService.getAvailableSeats();
     }
-    @PostMapping("/{id}/book")
-    public Seat bookSeat(@PathVariable Long id){
-        return seatService.bookSeat(id);
-    }
 }
