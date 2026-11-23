@@ -1,11 +1,16 @@
 package com.anirudh.demo;
 
 import com.anirudh.demo.model.Seat;
+import com.anirudh.demo.model.User;
+import com.anirudh.demo.repository.BookingRepository;
 import com.anirudh.demo.repository.SeatRepository;
+import com.anirudh.demo.repository.UserRepository;
+import com.anirudh.demo.service.BookingService;
 import com.anirudh.demo.service.SeatService;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.OptimisticLockingFailureException;
-
+import org.springframework.dao.DataIntegrityViolationException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +27,12 @@ public class SeatConcurrencyTest {
     private SeatService seatService;
      @Autowired
     private SeatRepository seatRepository;
+     @Autowired
+     private BookingService bookingService;
+     @Autowired
+     private BookingRepository bookingRepository;
+     @Autowired
+     private UserRepository userRepository;
     @Test
     void onlyOneUserCanBookTheSameTicket() throws InterruptedException{
         Seat seat = seatService.addSeat("RACE-1");
@@ -33,15 +44,20 @@ public class SeatConcurrencyTest {
         CountDownLatch done = new CountDownLatch(threads);
         AtomicInteger success = new AtomicInteger();
         AtomicInteger failed = new AtomicInteger();
-
+        if (!userRepository.existsByUsername("racer")) {
+            User u = new User();
+            u.setUsername("racer");
+            u.setPassword("x");
+            userRepository.save(u);
+        }
         for( int i=0; i < threads; i++){
             executor.submit(()-> {
                 try {
                     ready.countDown();
                     start.await();
-                    seatService.bookSeat(seatId);
+                    bookingService.bookSeat(seatId,"racer");
                     success.incrementAndGet();
-                } catch (OptimisticLockingFailureException | SeatAlreadyBookedException e) {
+                } catch (OptimisticLockingFailureException | SeatAlreadyBookedException |DataIntegrityViolationException e) {
                     failed.incrementAndGet();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -59,7 +75,13 @@ public class SeatConcurrencyTest {
 
         assertEquals(1,success.get());
         assertEquals(threads-1,failed.get());
-
+        bookingRepository.deleteAll();
         seatRepository.deleteById(seatId);
+    }
+    @AfterEach
+    void cleanUp() {
+        bookingRepository.deleteAll();
+        seatRepository.findBySeatNumber("RACE-1")
+                .ifPresent(s -> seatRepository.deleteById(s.getId()));
     }
 }
